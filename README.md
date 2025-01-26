@@ -8,7 +8,7 @@ In this section, I will be showcasing the result of the app that was created dur
 ## Home/Index
 ![Main menu](/DOCS/index.png)
 ## Dashboard
-![Dashboard page](/DOCS/index.png)
+![Dashboard page](/DOCS/dashboard.png)
 ## Management page
 ![Management page](/DOCS/management1.png)
 ## Data management page
