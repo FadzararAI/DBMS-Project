@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic DataTable with Insert</title>
+    <!-- Bootstrap CSS -->
+     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.5/css/jquery.dataTables.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center">Dynamic Data Table: {{ dataset_name.capitalize() }}</h1>
+        <table id="dataTable" class="table table-striped table-bordered">
+            <thead>
+                <tr>
+                    {% for column in columns %}
+                    <th>{{ column.name }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+        </table>
+
+        <!-- Add Data Form -->
+        <h2 class="mt-4 font-bold text-center pb-4 text-2xl">Add New Data</h2>
+        <form id="add_data" method="POST" action="/api/add/{{ dataset_name }}">
+            <div class="flex flex-row justify-center items-center">
+                {% for column in columns %}
+                <div class="ml-4 mb-6">
+                    <label for="{{ column.name }}" class="mb-2 block text-sm font-medium text-gray-900">
+                        {{ column.label if column.label else column.name }}
+                    </label>
+                    <input type="{{ column.type }}" id="{{ column.name }}" name="{{ column.name }}"
+                        class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2 text-sm text-gray-900 focus:border-green-500 focus:ring-green-500" />
+                </div>
+                {% endfor %}
+                <div class="ml-4">
+                    <button type="submit"
+                        class="hover:cursor-pointer text-white bg-blue-700 rounded-lg text-sm text-center font-medium hover:bg-blue-800 px-2 py-2">
+                        Add Data
+                    </button>
+                </div>
+            </div>
+        </form>
+        
+    </div>
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
+    <script>
+    document.addEventListener("DOMContentLoaded", function () {
+    // Function to handle $ formatting for cost and price
+    function addDollarFormatting(input) {
+        input.addEventListener("input", function (e) {
+            let value = e.target.value;
+
+            // Remove non-numeric characters except periods
+            value = value.replace(/[^0-9.]/g, "");
+
+            // Add the $ symbol at the beginning
+            if (value) {
+                e.target.value = `$${value}`;
+            } else {
+                e.target.value = "$"; // Default to $ if input is cleared
+            }
+        });
+
+        input.addEventListener("blur", function (e) {
+            // Format the value with two decimal places on blur
+            let value = e.target.value.replace(/[^0-9.]/g, "");
+            if (value) {
+                e.target.value = `$${parseFloat(value).toFixed(2)}`;
+            } else {
+                e.target.value = "$0.00"; // Default value
+            }
+        });
+    }
+
+    // Attach the functionality to both Product_Cost and Product_Price
+    const costInput = document.getElementById("Product_Cost");
+    const priceInput = document.getElementById("Product_Price");
+    if (costInput) addDollarFormatting(costInput);
+    if (priceInput) addDollarFormatting(priceInput);
+});
+
+    $(document).ready(function () {
+        const datasetName = "{{ dataset_name }}";
+
+        // Initialize DataTable
+        const table = $('#dataTable').DataTable({
+            processing: true,
+            serverSide: true,
+            ajax: `/api/data/${datasetName}`,
+            columns: [
+                {% for column in columns %}
+                { data: "{{ column.name }}" },
+                {% endfor %}
+            ]
+        });
+
+        // Handle form submission for adding data
+        $('#add_data').on('submit', function (e) {
+            e.preventDefault(); // Prevent the form from submitting normally
+
+            const formData = $(this).serialize(); // Serialize form data
+
+            $.ajax({
+                url: $(this).attr('action'), // The action URL from the form
+                method: 'POST',
+                data: formData,
+                success: function (response) {
+                    if (response.success) {
+                        alert(response.success);
+                        table.ajax.reload(); // Reload the DataTable
+                    } else if (response.error) {
+                        alert("Error: " + response.error);
+                    }
+                },
+                error: function (xhr) {
+                    alert("An error occurred: " + xhr.responseText);
+                }
+            });
+        });
+    });
+</script>
+
+</body>
+</html>

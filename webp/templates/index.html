@@ -1,0 +1,30 @@
+<html>
+    <head>
+        <title>Intro Menu</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+    </head>
+    <body>
+        <div class="flex justify-center items-center pb-5">
+            <h1 class="font-bold text-4xl">Welcome! Please choose which are you going to do</h1>
+          </div>
+
+          <div class="flex justify-center items-center">
+            <a href="{{ url_for('management') }}">
+              <div class="max-w-sm rounded overflow-hidden cursor-pointer shadow-lg mr-20 transition-all duration-700 hover:scale-110">
+                  <img class="w-full" src="https://media.assettype.com/analyticsinsight%2F2024-07%2Fc340770d-2620-43c7-a566-5e19570fc3bc%2FAi11.png">
+                  <div class="px-6 py-4">
+                      <div class="text-center font-bold text-3xl mb-2">DATA MANAGEMENT</div>
+                  </div>
+              </div>
+            </a>
+            <a href="/dashboard/">
+              <div class="max-w-sm rounded overflow-hidden cursor-pointer shadow-lg transition-all duration-700 hover:scale-110">
+                  <img class="w-full" src="https://upload.wikimedia.org/wikipedia/commons/b/b7/Infruid%27s_Self-Service_BI_Tool_Dashboard.jpg">
+                  <div class="px-6 py-4">
+                      <div class="text-center font-bold text-4xl mb-2">DASHBOARD</div>
+                  </div>
+              </div>
+            </a>
+          </div>
+    </body>
+</html>
