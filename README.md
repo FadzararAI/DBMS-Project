@@ -13,6 +13,8 @@ In this section, I will be showcasing the result of the app that was created dur
 ![Management page](/DOCS/management1.png)
 ## Data management page
 ![Data management page](/DOCS/add_try.png)
+## Database ERD
+![Database diagram](/DOCS/DB_diagram.png)
 
 # Unnormalized vs Normalized
 In this section, I will be showing the practical comparison. I will explain each image.
